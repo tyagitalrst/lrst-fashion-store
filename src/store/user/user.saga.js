@@ -1,15 +1,18 @@
 import { takeLatest, put, all, call } from "redux-saga/effects";
 
-import USER_ACTION_TYPES from "./user.types";
-
 import {
+  googleSignInStart,
+  emailSignInStart,
   signInSuccess,
   signInFailed,
-  signUpFailed,
+  signUpStart,
   signUpSuccess,
+  signUpFailed,
+  signOutStart,
   signOutSuccess,
   signOutFailed,
-} from "./user.action";
+  checkUserSession,
+} from "./user.slice";
 
 import {
   getCurrentUser,
@@ -91,36 +94,37 @@ export function* isUserAuthanticated() {
 }
 
 export function* onGoogleSignInStart() {
-  yield takeLatest(USER_ACTION_TYPES.GOOGLE_SIGN_IN_START, signInWithGoogle);
+  yield takeLatest(googleSignInStart.type, signInWithGoogle);
 }
 
 export function* onEmailSignInStart() {
-  yield takeLatest(USER_ACTION_TYPES.EMAIL_SIGN_IN_START, signInWithEmail);
+  yield takeLatest(emailSignInStart.type, signInWithEmail);
 }
 
 export function* onSignUpStart() {
-  yield takeLatest(USER_ACTION_TYPES.SIGN_UP_START, signUp);
+  yield takeLatest(signUpStart.type, signUp);
 }
 
 export function* onSignUpSuccess() {
-  yield takeLatest(USER_ACTION_TYPES.SIGN_IN_SUCCESS, signInAfterSignUp);
+  yield takeLatest(signUpSuccess.type, signInAfterSignUp);
 }
 
 export function* onSignOutStart() {
-  yield takeLatest(USER_ACTION_TYPES.SIGN_OUT_START, signOut);
+  yield takeLatest(signOutStart.type, signOut);
 }
 
 export function* onCheckUserFunciton() {
-  yield takeLatest(USER_ACTION_TYPES.CHECK_USER_SESSION, isUserAuthanticated);
+  // Listen for the checkUserSession action and call the isUserAuthanticated saga when dispatched
+  yield takeLatest(checkUserSession.type, isUserAuthanticated);
 }
 
 export function* userSaga() {
   yield all([
-    call(onCheckUserFunciton),
     call(onGoogleSignInStart),
     call(onEmailSignInStart),
     call(onSignUpStart),
     call(onSignUpSuccess),
     call(onSignOutStart),
+    call(onCheckUserFunciton),
   ]);
 }

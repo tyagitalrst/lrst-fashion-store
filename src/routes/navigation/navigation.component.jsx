@@ -16,7 +16,7 @@ import {
   NavLink,
   LogoContainer,
 } from "./navigation.styles";
-import { signOutStart } from "../../store/user/user.action";
+import { signOutStart } from "../../store/user/user.slice";
 
 const Navagiation = () => {
   const dispatch = useDispatch();
